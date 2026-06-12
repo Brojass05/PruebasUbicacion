@@ -2,45 +2,75 @@ package com.example.pruebasubicacion
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.google.android.gms.location.FusedLocationProviderClient
+import com.example.pruebasubicacion.view.UbicacionView
+import com.example.pruebasubicacion.viewmodel.UbicacionViewModel
 import com.google.android.gms.location.LocationServices
-import com.example.pruebasubicacion.viewmodel.UbicacionViewModel
-import com.example.pruebasubicacion.viewmodel.UbicacionViewModel
+import kotlin.math.round
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
+    private val vistaModelo: UbicacionViewModel by viewModels()
 
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
-        findViewById<Button>(R.id.supabutton).setOnClickListener {
-            // 2. Al pulsar el botón, comprobamos permisos
-            checkPermissionsAndGetLocation()
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
+            obtenerUbicacion()
+        } else {
+            Toast.makeText(this, "Permiso de ubicación denegado", Toast.LENGTH_SHORT).show()
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        
+        setContent {
+            UbicacionView(
+                estado = vistaModelo.state,
+                onFetchLocation = { checkPermissionsAndGetLocation() }
+            )
+        }
+    }
 
+    private fun checkPermissionsAndGetLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            requestPermissionLauncher.launch(arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ))
+        } else {
+            obtenerUbicacion()
+        }
+    }
+
+    private fun obtenerUbicacion() {
+        val fusedClient = LocationServices.getFusedLocationProviderClient(this)
+        
+        try {
+            fusedClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    val lat = round(location.latitude * 100) / 100
+                    val lon = round(location.longitude * 100) / 100
+                    // Cargamos los datos en el ViewModel
+                    vistaModelo.cargarClima(lat, lon)
+                } else {
+                    Toast.makeText(this, "No se pudo obtener la ubicación. Verifica tu GPS.", Toast.LENGTH_LONG).show()
+                }
+            }
+        } catch (e: SecurityException) {
+            Toast.makeText(this, "Error de permisos: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
 }
