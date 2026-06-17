@@ -1,6 +1,6 @@
 package com.example.pruebasubicacion.view
 
-import android.R
+
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -110,30 +110,17 @@ fun ClimaContent(clima: ClimaModel) {
 
 
                 Spacer(Modifier.height(16.dp))
+                Text(
+                    text = "${currentPm25}",
+                    style = MaterialTheme.typography.displayLarge,
+                    color = Color.White,
+                    fontWeight = FontWeight.Black
+                )
+                if(currentPm25>120) plantillasTexto().TextoMalAire() else plantillasTexto().TextoBuenAire()
             }
-            Column(
-                modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.End
-            ) {
-                Row(                ){
-                    Spacer(Modifier.width(4.dp))
-                    Text(
-                        text = "$currentPm25",
-                        style = MaterialTheme.typography.displaySmall,
-                        color = (if (currentPm25 > 120 ){Color.Black}else{Color.White}),
-                        fontWeight = FontWeight.Black,
 
-                        )
-                    if (currentPm25 < 120) plantillasTexto().TextoMalAire() else plantillasTexto().TextoBuenAire()
-                    /*Text(
-                        text = "PM2.5 (µg/m³)",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.White.copy(alpha = 0.7f)
-                    )*/
-
-                }
             }
-        }
+
 
         Spacer(Modifier.height(16.dp))
 
