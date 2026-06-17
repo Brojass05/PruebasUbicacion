@@ -3,6 +3,7 @@ package com.example.pruebasubicacion
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,13 +34,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        
+
         setContent {
             UbicacionView(
                 estado = vistaModelo.state,
                 onFetchLocation = { checkPermissionsAndGetLocation() }
             )
         }
+        checkPermissionsAndGetLocation()
     }
 
     private fun checkPermissionsAndGetLocation() {
@@ -57,14 +59,18 @@ class MainActivity : ComponentActivity() {
 
     private fun obtenerUbicacion() {
         val fusedClient = LocationServices.getFusedLocationProviderClient(this)
-        
+
         try {
             fusedClient.lastLocation.addOnSuccessListener { location ->
                 if (location != null) {
+                    val oldLat = location.latitude
+                    val oldLon = location.longitude
                     val lat = round(location.latitude * 100) / 100
                     val lon = round(location.longitude * 100) / 100
                     // Cargamos los datos en el ViewModel
                     vistaModelo.cargarClima(lat, lon)
+                    val msg = "Lat: ${oldLat}, Lon: ${oldLon}"
+                    Log.d("LOCATION", msg)
                 } else {
                     Toast.makeText(this, "No se pudo obtener la ubicación. Verifica tu GPS.", Toast.LENGTH_LONG).show()
                 }
