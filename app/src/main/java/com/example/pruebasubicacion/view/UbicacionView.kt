@@ -1,5 +1,7 @@
 package com.example.pruebasubicacion.view
 
+import android.R
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.example.pruebasubicacion.model.ClimaEstado
 import com.example.pruebasubicacion.model.ClimaModel
 import com.example.pruebasubicacion.model.HourlyData
+import com.example.pruebasubicacion.ui.components.common.plantillasTexto
 
 @Composable
 fun UbicacionView(
@@ -78,17 +81,20 @@ fun UbicacionView(
 
 @Composable
 fun ClimaContent(clima: ClimaModel) {
+    val currentPm25 = clima.hourly.pm2_5.firstOrNull() ?: 0f
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
             shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.15f))
+            colors = if (currentPm25>120) CardDefaults.cardColors(containerColor = Color.Red.copy(alpha = 1f))
+            else CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.15f))
+
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.Start
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.LocationOn, contentDescription = null, tint = Color.White)
@@ -98,22 +104,34 @@ fun ClimaContent(clima: ClimaModel) {
                         color = Color.White,
                         style = MaterialTheme.typography.bodyLarge
                     )
+                    val msg = "Lat: ${clima.latitude}, Lon: ${clima.longitude}"
+                    Log.d("LOCATION", msg)
                 }
-                
+
+
                 Spacer(Modifier.height(16.dp))
-                
-                val currentPm25 = clima.hourly.pm2_5.firstOrNull() ?: 0f
-                Text(
-                    text = "${currentPm25}",
-                    style = MaterialTheme.typography.displayLarge,
-                    color = Color.White,
-                    fontWeight = FontWeight.Black
-                )
-                Text(
-                    text = "PM2.5 (µg/m³)",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White.copy(alpha = 0.7f)
-                )
+            }
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.End
+            ) {
+                Row(                ){
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = "$currentPm25",
+                        style = MaterialTheme.typography.displaySmall,
+                        color = (if (currentPm25 > 120 ){Color.Black}else{Color.White}),
+                        fontWeight = FontWeight.Black,
+
+                        )
+                    if (currentPm25 < 120) plantillasTexto().TextoMalAire() else plantillasTexto().TextoBuenAire()
+                    /*Text(
+                        text = "PM2.5 (µg/m³)",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.White.copy(alpha = 0.7f)
+                    )*/
+
+                }
             }
         }
 
@@ -187,7 +205,8 @@ fun UbicacionViewPreview() {
         hourly = HourlyData(
             time = listOf("2023-10-27T10:00", "2023-10-27T11:00", "2023-10-27T12:00"),
             pm2_5 = listOf(12.5f, 15.2f, 10.8f)
-        )
+        ),
+        forecast_days = 1
     )
     UbicacionView(
         estado = ClimaEstado(clima = mockClima),

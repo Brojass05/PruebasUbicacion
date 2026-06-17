@@ -1,20 +1,22 @@
 package com.example.pruebasubicacion.model
 
-import java.util.Date
+
 
 /**
  * Modelo de datos que representa una Factura.
  *
- * @property latitud Identificador único de la factura.
- * @property longitud Nombre del cliente asociado a la factura.
- * @property hourly Fecha de emisión de la factura.
- * @property pm2_5 Monto total de la factura.
+ * @property latitud Latitud del usuario.
+ * @property longitud Longitud del usuario.
+ * @property hourly Datos por hora.
+ * @property pm2_5 Tipo de dato a obtener.
+ * @property forecast_days Dias en adelante para obtener.
  */
 
 data class ClimaModel(
     val latitude: Double,
     val longitude: Double,
-    val hourly: HourlyData
+    val hourly: HourlyData,
+    val forecast_days: Int
 )
 
 data class HourlyData(

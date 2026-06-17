@@ -11,7 +11,8 @@ interface ServicioAPI {
     suspend fun getPm2_5(
         @Query("latitude") lat: Double,
         @Query("longitude") lon: Double,
-        @Query("hourly") hourly: String = "pm2_5"
+        @Query("hourly") hourly: String = "pm2_5",
+        @Query("forecast_days") foreDays: Int = 1
     ): ClimaModel
 
     companion object {
@@ -31,4 +32,6 @@ interface ServicioAPI {
             return servicioAPI!!
         }
     }
+
+
 }
