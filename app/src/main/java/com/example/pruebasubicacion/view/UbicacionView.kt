@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.example.pruebasubicacion.model.ClimaEstado
-import com.example.pruebasubicacion.model.ClimaModel
+import com.example.pruebasubicacion.model.CalidadAire
 import com.example.pruebasubicacion.model.HourlyData
 import com.example.pruebasubicacion.ui.components.common.plantillasTexto
 
@@ -125,7 +125,7 @@ fun UbicacionView(
 }
 
 @Composable
-fun ClimaContent(clima: ClimaModel, onNavigateToDetail: () -> Unit) {
+fun ClimaContent(clima: CalidadAire, onNavigateToDetail: () -> Unit) {
     val currentPm25 = clima.hourly.pm2_5.firstOrNull() ?: 0f
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -237,7 +237,7 @@ fun ErrorCard(mensaje: String, onRetry: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun UbicacionViewPreview() {
-    val mockClima = ClimaModel(
+    val mockClima = CalidadAire(
         latitude = -33.45,
         longitude = -70.66,
         hourly = HourlyData(

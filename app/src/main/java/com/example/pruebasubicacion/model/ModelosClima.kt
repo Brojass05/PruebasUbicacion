@@ -12,11 +12,23 @@ package com.example.pruebasubicacion.model
  * @property forecast_days Dias en adelante para obtener.
  */
 
-data class ClimaModel(
+data class CalidadAire(
     val latitude: Double,
     val longitude: Double,
     val hourly: HourlyData,
     val forecast_days: Int
+)
+
+data class ClimaGeneral(
+    val latitude: Double,
+    val longitude: Double,
+    val hourly: HourlyGeneralData
+)
+
+data class HourlyGeneralData(
+    val time: List<String>,
+    val temperature_2m: List<Float>,
+    val relativehumidity_2m: List<Float>
 )
 
 data class HourlyData(

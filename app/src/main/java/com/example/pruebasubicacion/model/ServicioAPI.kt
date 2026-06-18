@@ -13,7 +13,7 @@ interface ServicioAPI {
         @Query("longitude") lon: Double,
         @Query("hourly") hourly: String = "pm2_5",
         @Query("forecast_days") foreDays: Int = 1
-    ): ClimaModel
+    ): CalidadAire
 
     @GET("v1/forecast")
     suspend fun getForecast(
