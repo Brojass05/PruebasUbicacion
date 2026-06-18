@@ -10,7 +10,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.runtime.Composable
 import androidx.core.app.ActivityCompat
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.pruebasubicacion.view.DetalleView
 import com.example.pruebasubicacion.view.UbicacionView
 import com.example.pruebasubicacion.viewmodel.UbicacionViewModel
 import com.google.android.gms.location.LocationServices
@@ -36,10 +41,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            UbicacionView(
-                estado = vistaModelo.state,
-                onFetchLocation = { checkPermissionsAndGetLocation() }
-            )
+            MiAppNavegacion()
         }
         checkPermissionsAndGetLocation()
     }
@@ -77,6 +79,24 @@ class MainActivity : ComponentActivity() {
             }
         } catch (e: SecurityException) {
             Toast.makeText(this, "Error de permisos: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    @Composable
+    fun MiAppNavegacion(){
+        val navController = rememberNavController()
+
+        NavHost(navController = navController, startDestination = "inicio"){
+            composable("inicio"){
+                UbicacionView(
+                    estado = vistaModelo.state,
+                    onFetchLocation = { checkPermissionsAndGetLocation() },
+                    onNavigateToDetail = { navController.navigate("detalle") }
+                )
+            }
+            composable("detalle"){
+                DetalleView(onNavigateBack = { navController.popBackStack() })
+            }
         }
     }
 }

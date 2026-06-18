@@ -1,13 +1,17 @@
 package com.example.pruebasubicacion.view
 
 
+import android.R
 import android.util.Log
+import android.widget.Button
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Airplay
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
@@ -16,9 +20,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import com.example.pruebasubicacion.model.ClimaEstado
 import com.example.pruebasubicacion.model.ClimaModel
 import com.example.pruebasubicacion.model.HourlyData
@@ -27,8 +37,10 @@ import com.example.pruebasubicacion.ui.components.common.plantillasTexto
 @Composable
 fun UbicacionView(
     estado: ClimaEstado,
-    onFetchLocation: () -> Unit
+    onFetchLocation: () -> Unit,
+    onNavigateToDetail: () -> Unit
 ) {
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -40,18 +52,51 @@ fun UbicacionView(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
+                .fillMaxSize(),
+                //.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Header
-            Text(
-                text = "Calidad del Aire",
-                style = MaterialTheme.typography.headlineMedium,
+
+            Card(
+                onClick = onNavigateToDetail,
+                Modifier
+                    .fillMaxWidth(),
+                shape = RectangleShape,
+                colors = CardDefaults.cardColors(containerColor = Color(0xff155cfc)),
+            ) {
+                Text(
+                    text = " ",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(vertical = 10.dp)
+                )
+                Text(
+                text = "Eco-Alert \nRecomendaciones de salud",
+                style = MaterialTheme.typography.headlineSmall,
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(vertical = 24.dp)
-            )
+                fontFamily = FontFamily.SansSerif,
+                modifier = Modifier.padding(vertical = 20.dp)
+                )
+                Card(
+
+                ){
+                    //Switch()
+                    Button(
+                        onClick = onNavigateToDetail,
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White),
+                        border = BorderStroke(1.dp, Color.White),
+                    ) {
+                        Icon(
+                            Icons.Default.Airplay,
+                            contentDescription = null
+                        )
+                        Text("Cambio de Pantalla")
+                    }
+                }
+            }
 
             // Main Card or Status
             when {
@@ -62,7 +107,7 @@ fun UbicacionView(
                     ErrorCard(mensaje = estado.mensajeError, onRetry = onFetchLocation)
                 }
                 estado.clima != null -> {
-                    ClimaContent(clima = estado.clima)
+                    ClimaContent(clima = estado.clima, onNavigateToDetail = onNavigateToDetail)
                 }
                 else -> {
                     Button(
@@ -80,16 +125,21 @@ fun UbicacionView(
 }
 
 @Composable
-fun ClimaContent(clima: ClimaModel) {
+fun ClimaContent(clima: ClimaModel, onNavigateToDetail: () -> Unit) {
     val currentPm25 = clima.hourly.pm2_5.firstOrNull() ?: 0f
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Card(
+            onClick = onNavigateToDetail,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
             shape = RoundedCornerShape(24.dp),
-            colors = if (currentPm25>120) CardDefaults.cardColors(containerColor = Color.Red.copy(alpha = 1f))
-            else CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.15f))
+            colors = if (currentPm25>120)
+                CardDefaults.cardColors(containerColor = Color.Red.copy(alpha = 1f))
+                else
+                CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.15f))
+
 
         ) {
             Column(
@@ -133,6 +183,7 @@ fun ClimaContent(clima: ClimaModel) {
 
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
+
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             itemsIndexed(clima.hourly.time) { index, time ->
@@ -197,6 +248,7 @@ fun UbicacionViewPreview() {
     )
     UbicacionView(
         estado = ClimaEstado(clima = mockClima),
-        onFetchLocation = {}
+        onFetchLocation = {},
+        onNavigateToDetail = {}
     )
 }
