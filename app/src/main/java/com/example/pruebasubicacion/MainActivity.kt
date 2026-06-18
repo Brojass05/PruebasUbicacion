@@ -15,9 +15,9 @@ import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.pruebasubicacion.view.DetalleView
-import com.example.pruebasubicacion.view.UbicacionView
-import com.example.pruebasubicacion.viewmodel.UbicacionViewModel
+import com.example.pruebasubicacion.presentation.view.DetalleView
+import com.example.pruebasubicacion.presentation.view.UbicacionView
+import com.example.pruebasubicacion.presentation.viewmodel.UbicacionViewModel
 import com.google.android.gms.location.LocationServices
 import kotlin.math.round
 

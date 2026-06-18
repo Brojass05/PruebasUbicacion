@@ -1,4 +1,4 @@
-package com.example.pruebasubicacion.view
+package com.example.pruebasubicacion.presentation.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,7 +53,7 @@ fun DetalleView(onNavigateBack: () -> Unit) {
                     text = "Aquí podrías mostrar información extendida sobre la calidad del aire.",
                     color = Color.White,
                     modifier = Modifier.padding(horizontal = 32.dp),
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    textAlign = TextAlign.Center
                 )
             }
         }

@@ -1,8 +1,8 @@
-package com.example.pruebasubicacion.viewmodel
+package com.example.pruebasubicacion.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.pruebasubicacion.model.ClimaEstado
-import com.example.pruebasubicacion.model.ServicioAPI
+import com.example.pruebasubicacion.data.model.ClimaEstado
+import com.example.pruebasubicacion.data.model.ServicioAPI
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue

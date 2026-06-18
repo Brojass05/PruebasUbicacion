@@ -1,4 +1,4 @@
-package com.example.pruebasubicacion.ui.components.common
+package com.example.pruebasubicacion.presentation.ui.components.common
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text

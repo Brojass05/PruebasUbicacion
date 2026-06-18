@@ -1,4 +1,4 @@
-package com.example.pruebasubicacion.model
+package com.example.pruebasubicacion.data.model
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -20,7 +20,7 @@ interface ServicioAPI {
         @Query("latitude") lat: Double,
         @Query("longitude") lon: Double,
         @Query("hourly") hourly: String = "temperature_2m,relativehumidity_2m"
-    )
+    ): ClimaGeneral
 
     companion object {
         private var servicioAPI: ServicioAPI? = null

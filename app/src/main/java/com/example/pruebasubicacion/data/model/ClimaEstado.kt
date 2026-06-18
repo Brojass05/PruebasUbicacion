@@ -1,4 +1,4 @@
-package com.example.pruebasubicacion.model
+package com.example.pruebasubicacion.data.model
 
 data class ClimaEstado (
     val clima: CalidadAire? = null,

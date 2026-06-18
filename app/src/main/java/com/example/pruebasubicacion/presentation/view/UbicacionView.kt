@@ -1,9 +1,7 @@
-package com.example.pruebasubicacion.view
+package com.example.pruebasubicacion.presentation.view
 
 
-import android.R
 import android.util.Log
-import android.widget.Button
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,18 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
-import com.example.pruebasubicacion.model.ClimaEstado
-import com.example.pruebasubicacion.model.CalidadAire
-import com.example.pruebasubicacion.model.HourlyData
-import com.example.pruebasubicacion.ui.components.common.plantillasTexto
+import com.example.pruebasubicacion.data.model.ClimaEstado
+import com.example.pruebasubicacion.data.model.CalidadAire
+import com.example.pruebasubicacion.data.model.HourlyData
+import com.example.pruebasubicacion.presentation.ui.components.common.plantillasTexto
 
 @Composable
 fun UbicacionView(
