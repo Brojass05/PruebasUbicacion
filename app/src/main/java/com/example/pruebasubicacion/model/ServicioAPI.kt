@@ -15,6 +15,13 @@ interface ServicioAPI {
         @Query("forecast_days") foreDays: Int = 1
     ): ClimaModel
 
+    @GET("v1/forecast")
+    suspend fun getForecast(
+        @Query("latitude") lat: Double,
+        @Query("longitude") lon: Double,
+        @Query("hourly") hourly: String = "temperature_2m,relativehumidity_2m"
+    )
+
     companion object {
         private var servicioAPI: ServicioAPI? = null
         private const val BASE_URL = "https://air-quality-api.open-meteo.com/"
