@@ -1,7 +1,10 @@
 package com.example.pruebasubicacion
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -38,21 +41,28 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        createNotificationChannel(this)
         enableEdgeToEdge()
 
         setContent {
             MiAppNavegacion()
+
         }
+
         checkPermissionsAndGetLocation()
     }
 
+
     private fun checkPermissionsAndGetLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
 
             requestPermissionLauncher.launch(arrayOf(
+                Manifest.permission.POST_NOTIFICATIONS,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
+
             ))
         } else {
             obtenerUbicacion()
@@ -100,3 +110,20 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+private fun createNotificationChannel(context: Context) {
+    // Only necessary for API 26+ (Android 8.0)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val name = "My App Notifications"
+        val descriptionText = "This channel is used for general alerts"
+        val importance = android.app.NotificationManager.IMPORTANCE_DEFAULT
+        // THE ID MUST BE THE SAME AS YOU USE IN THE BUILDER ("CHANNEL_ID_EJEMPLO")
+        val channel = NotificationChannel("CHANNEL_ID_EJEMPLO", name, importance).apply {
+            description = descriptionText
+        }
+        // Register the channel with the system
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+}
+
+
